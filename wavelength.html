@@ -235,13 +235,13 @@
     <div class="card">
       <div class="step-label">準備 ✦ チーム名</div>
       <h2>チーム名を入力してください</h2>
-      <p class="prompt-text">2チームで対戦します。それぞれの名前を入力しましょう</p>
+      <p class="prompt-text">2チームで対戦します。それぞれの名前を入力しましょう。</p>
       <div class="input-group">
-        <label class="input-label">お題を出すチーム（Aチーム）</label>
+        <label class="input-label">お題を出すチーム</label>
         <input type="text" id="team-a-name" placeholder="例：月のチーム" maxlength="20">
       </div>
       <div class="input-group">
-        <label class="input-label">数字を当てるチーム（Bチーム）</label>
+        <label class="input-label">数字を当てるチーム</label>
         <input type="text" id="team-b-name" placeholder="例：星のチーム" maxlength="20">
       </div>
       <button class="btn" onclick="startGame()">✦ ゲームをはじめる</button>
@@ -264,7 +264,7 @@
       </div>
       <div class="step-label">Step 1 ✦ 数字を設定</div>
       <h2 id="a-heading">チームA、正解の数字を設定してください</h2>
-      <p class="prompt-text" id="a-prompt">アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>Bチームは目を閉じて</strong>もらいましょう 👁</p>
+      <p class="prompt-text" id="a-prompt">アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>相手チームは目を閉じて</strong>もらいましょう 👁</p>
       <div class="topic-box">
         <div class="topic-ends">
           <span>← お題A（左端）</span>
@@ -282,16 +282,16 @@
           <span class="tick">お題B ▷</span>
         </div>
       </div>
-      <button class="btn" onclick="confirmA()">✦ この数字に決める（Bチームに渡す）</button>
+      <button class="btn" onclick="confirmA()">✦ この数字に決める（相手チームに渡す）</button>
     </div>
   </div>
 
-  <-- PHASE B -->
+  <!-- PHASE B -->
   <div class="phase" id="phase-b">
     <div class="card">
       <div class="step-label">Step 2 ✦ 数字を当てる</div>
       <h2 id="b-heading">チームB、数字を当ててください</h2>
-      <p class="prompt-text" id="b-prompt">設定した数字を当ててください。スケール上のどのあたりでしょう？</p>
+      <p class="prompt-text" id="b-prompt">相手チームが設定した数字を当ててください。スケール上のどのあたりでしょう？</p>
       <div class="topic-box">
         <div class="topic-ends">
           <span>← お題A（左端）</span>
@@ -330,7 +330,7 @@
       <div class="winner-display">
         <span class="trophy">🌙</span>
         <h2 id="winner-name" style="font-size:20px;letter-spacing:3px">チームBの勝利</h2>
-        <p class="prompt-text" style="margin-top:8px" id="winner-message">素晴らしい感受性でした</p>
+        <p class="prompt-text" style="margin-top:8px" id="winner-message">素晴らしい感受性でした。</p>
       </div>
       <div class="final-scores">
         <div class="final-score" id="final-a">
@@ -356,7 +356,7 @@
       <div class="reveal-pts-label">POINTS</div>
     </div>
     <div class="reveal-title" id="reveal-title">いい線</div>
-    <div class="reveal-msg" id="reveal-msg">もう少しでした</div>
+    <div class="reveal-msg" id="reveal-msg">もう少しでした。</div>
     <div class="reveal-numbers">
       <div class="reveal-num-item"><div class="reveal-num-label">正解</div><div class="reveal-num-val" id="r-target">—</div></div>
       <div class="reveal-num-item"><div class="reveal-num-label">回答</div><div class="reveal-num-val" id="r-guess">—</div></div>
@@ -415,8 +415,8 @@ function startGame(){
 function showPhaseA(){
   updateSB();
   document.getElementById('round-badge-a').textContent=`Round ${state.round} / ${state.totalRounds}`;
-  document.getElementById('a-heading').textContent=`${state.teamA}、正解の数字を設定してください;
-  document.getElementById('a-prompt').innerHTML=`相手の数字をエスパーして、数字を予想してください。;
+  document.getElementById('a-heading').textContent=`${state.teamA}、正解の数字を設定してください ✨`;
+  document.getElementById('a-prompt').innerHTML=`アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>${state.teamB}は目を閉じて</strong>もらいましょう 👁`;
   document.getElementById('slider-a').value=50;
   document.getElementById('value-a').textContent=50;
   showPhase('a');
@@ -431,7 +431,7 @@ function updateSlider(t,v){
 function confirmA(){
   state.targetValue=parseInt(document.getElementById('slider-a').value);
   document.getElementById('b-heading').textContent=`${state.teamB}、数字を当ててください 🌙`;
-  document.getElementById('b-prompt').textContent=`${state.teamA}が設定した数字を当ててください。`;
+  document.getElementById('b-prompt').textContent=`${state.teamA}が設定した数字を当ててください。スケール上のどのあたりでしょう？`;
   document.getElementById('slider-b').value=50;
   document.getElementById('value-b').textContent=50;
   showPhase('b');
@@ -482,13 +482,13 @@ function showRevealCard(){
   const diff=Math.abs(target-guess), pts=calcPoints(target,guess);
   state.scoreB+=pts;
 
-  const titles=['残念…','もう少し','いい線いってる','かなり惜しい','完璧'];
+  const titles=['残念…','もう少し','いい線いってる','かなり惜しい','完璧 🎉'];
   const msgs=[
     `差は ${diff}。次は感覚を研ぎ澄ませて…`,
-    `差は ${diff}。もう少しで届きそう`,
-    `差は ${diff}。なかなか近い`,
-    `差は ${diff}。あと少し`,
-    `差は ${diff}！ 魂が共鳴しました`,
+    `差は ${diff}。もう少しで届きそう。`,
+    `差は ${diff}。なかなか近い。`,
+    `差は ${diff}。あと少しだった。`,
+    `差は ${diff}。魂が共鳴しました ✨`,
   ];
 
   document.getElementById('reveal-pts').textContent=pts;
@@ -551,15 +551,15 @@ function showEndGame(){
 
   if(state.scoreB>state.scoreA){
     document.getElementById('final-b').classList.add('winner');
-    document.getElementById('winner-name').textContent=`${state.teamB} の勝利！ 🌙`;
-    document.getElementById('winner-message').textContent=`${state.teamA}との波長を見事に読み切りました！`;
+    document.getElementById('winner-name').textContent=`${state.teamB} の勝利 🌙`;
+    document.getElementById('winner-message').textContent=`${state.teamA}との波長を見事に読み切りました。`;
   } else if(state.scoreA>state.scoreB){
     document.getElementById('final-a').classList.add('winner');
-    document.getElementById('winner-name').textContent=`${state.teamA} の勝利！`;
-    document.getElementById('winner-message').textContent=`${state.teamB}、次回は逆転を！`;
+    document.getElementById('winner-name').textContent=`${state.teamA} の勝利`;
+    document.getElementById('winner-message').textContent=`${state.teamB}、次回は逆転を。`;
   } else {
-    document.getElementById('winner-name').textContent=`引き分け！ ✦`;
-    document.getElementById('winner-message').textContent=`ふたつの魂が完全に共鳴した…！`;
+    document.getElementById('winner-name').textContent=`引き分け ✦`;
+    document.getElementById('winner-message').textContent=`ふたつの魂が完全に共鳴した…`;
   }
   showPhase('end');
 }
