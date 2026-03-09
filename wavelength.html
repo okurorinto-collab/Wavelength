@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ウェーブレングス</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5efe4;
+    --bg2: #ede5d7;
+    --navy: #1e2b4a;
+    --navy-mid: #2d3f6b;
+    --navy-light: #4a5f8a;
+    --navy-pale: #8090b8;
+    --gold: #b8923a;
+    --gold-light: #d4aa55;
+    --white: #ffffff;
+    --border: rgba(30,43,74,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--navy);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 20px 60px;
+  }
+
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--navy-pale);
+    opacity: 0;
+    animation: drift var(--dur, 12s) ease-in-out var(--del, 0s) infinite;
+  }
+  @keyframes drift {
+    0%   { opacity: 0; transform: translateY(0) scale(1); }
+    20%  { opacity: 0.15; }
+    80%  { opacity: 0.08; }
+    100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+  }
+
+  .container { position: relative; z-index: 1; width: 100%; max-width: 600px; }
+
+  .header { text-align: center; margin-bottom: 36px; animation: fadeDown 1s ease both; }
+  .moon-deco { font-size: 24px; letter-spacing: 14px; color: var(--gold); margin-bottom: 10px; animation: floatY 5s ease-in-out infinite; }
+  @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .title { font-family:'Cinzel',serif; font-size:clamp(24px,7vw,38px); font-weight:600; color:var(--navy); letter-spacing:8px; }
+  .title-jp { font-size:12px; color:var(--navy-pale); letter-spacing:5px; margin-top:6px; }
+
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 36px 30px;
+    box-shadow: 0 4px 32px rgba(30,43,74,0.10), 0 1px 0 rgba(30,43,74,0.04);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(24px) scale(0.98); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .step-label {
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:4px; color:var(--navy-pale);
+    text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .step-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); }
+
+  .card h2 { font-family:'Noto Serif JP',serif; font-size:18px; font-weight:500; color:var(--navy); margin-bottom:10px; line-height:1.6; }
+  .prompt-text { font-size:13px; color:var(--navy-light); line-height:1.9; margin-bottom:20px; }
+
+  .input-group { margin-bottom:18px; }
+  .input-label { font-size:11px; color:var(--navy-pale); letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; display:block; }
+  input[type="text"] {
+    width:100%; background:var(--bg); border:1.5px solid var(--border); border-radius:12px;
+    padding:14px 18px; color:var(--navy); font-family:'Noto Serif JP',serif; font-size:15px;
+    outline:none; transition:border-color 0.3s, box-shadow 0.3s;
+  }
+  input[type="text"]:focus { border-color:var(--navy-mid); box-shadow:0 0 0 3px rgba(30,43,74,0.08); }
+  input[type="text"]::placeholder { color:var(--navy-pale); }
+
+  .btn {
+    width:100%; padding:16px; background:var(--navy); border:none; border-radius:14px;
+    color:var(--white); font-family:'Noto Serif JP',serif; font-size:14px; font-weight:500;
+    letter-spacing:2px; cursor:pointer;
+    transition:transform 0.3s cubic-bezier(.22,.68,0,1.5), box-shadow 0.3s;
+    box-shadow:0 4px 20px rgba(30,43,74,0.2); margin-top:8px; position:relative; overflow:hidden;
+  }
+  .btn:hover { transform:translateY(-3px) scale(1.01); box-shadow:0 8px 30px rgba(30,43,74,0.28); }
+  .btn:active { transform:translateY(0) scale(0.99); }
+  .btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
+  .btn-ghost { background:transparent; border:1.5px solid var(--border); color:var(--navy-light); box-shadow:none; }
+  .btn-ghost:hover { background:var(--bg); box-shadow:none; transform:translateY(-2px); }
+
+  .scoreboard { display:flex; gap:10px; margin-bottom:24px; }
+  .team-score { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; }
+  @keyframes scoreBump { 0%{transform:scale(1)} 50%{transform:scale(1.12);background:#e8f0ff} 100%{transform:scale(1)} }
+  .team-score.bump { animation:scoreBump 0.5s cubic-bezier(.22,.68,0,1.5); }
+  .team-name-display { font-size:11px; color:var(--navy-pale); letter-spacing:2px; margin-bottom:4px; }
+  .score-num { font-family:'Cinzel',serif; font-size:28px; color:var(--navy); font-weight:600; }
+
+  .round-badge {
+    display:inline-block; background:var(--bg); border:1px solid var(--border); border-radius:20px;
+    padding:5px 16px; font-size:11px; color:var(--navy-pale); letter-spacing:3px; margin-bottom:18px; font-family:'Cinzel',serif;
+  }
+
+  .topic-box { background:var(--bg); border:1px solid var(--border); border-radius:16px; padding:18px 20px; text-align:center; margin-bottom:24px; }
+  .topic-ends { display:flex; justify-content:space-between; font-size:11px; color:var(--navy-pale); letter-spacing:1px; margin-bottom:8px; }
+  .topic-arrow { font-size:12px; color:var(--navy-pale); letter-spacing:2px; }
+
+  .dial-section { margin-bottom:24px; }
+  .dial-label { font-size:12px; color:var(--navy-pale); letter-spacing:2px; text-align:center; margin-bottom:14px; }
+
+  input[type="range"] { width:100%; -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer; margin:8px 0; }
+  input[type="range"]::-webkit-slider-runnable-track { height:6px; background:var(--bg2); border-radius:3px; border:1px solid var(--border); }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance:none; width:32px; height:32px; background:var(--navy); border-radius:50%;
+    margin-top:-14px; box-shadow:0 3px 14px rgba(30,43,74,0.3); cursor:grab;
+    transition:transform 0.2s, box-shadow 0.2s; border:3px solid white;
+  }
+  input[type="range"]:active::-webkit-slider-thumb { cursor:grabbing; transform:scale(1.15); box-shadow:0 5px 20px rgba(30,43,74,0.4); }
+
+  .dial-value { text-align:center; font-family:'Cinzel',serif; font-size:44px; color:var(--navy); font-weight:600; margin:6px 0 4px; }
+  @keyframes numPop { 0%{transform:scale(0.85)} 60%{transform:scale(1.08)} 100%{transform:scale(1)} }
+  .num-pop { animation:numPop 0.2s cubic-bezier(.22,.68,0,1.5) both; }
+
+  .dial-ticks { display:flex; justify-content:space-between; padding:0 4px; margin-top:2px; }
+  .tick { font-size:10px; color:var(--navy-pale); letter-spacing:1px; }
+
+  .score-zones { display:flex; gap:3px; margin-bottom:18px; height:24px; border-radius:12px; overflow:hidden; }
+  .zone { display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600; letter-spacing:1px; flex:1; }
+  .zone-4 { background:var(--navy); color:white; }
+  .zone-3 { background:var(--navy-mid); color:white; }
+  .zone-2 { background:var(--navy-pale); color:white; }
+  .zone-1 { background:var(--bg2); color:var(--navy-pale); border:1px solid var(--border); }
+
+  /* ===== RESULT OVERLAY ===== */
+  .result-overlay {
+    display:none; position:fixed; inset:0; z-index:100;
+    align-items:center; justify-content:center; flex-direction:column;
+    background:rgba(245,239,228,0);
+  }
+  .result-overlay.active { display:flex; animation:overlayIn 0.5s ease both; }
+  @keyframes overlayIn { from{background:rgba(245,239,228,0)} to{background:rgba(245,239,228,0.97)} }
+
+  .countdown-num {
+    font-family:'Cinzel',serif; font-size:120px; color:var(--navy); font-weight:600;
+    display:none; line-height:1;
+  }
+  @keyframes countIn { 0%{transform:scale(2.5);opacity:0} 60%{transform:scale(0.88);opacity:1} 100%{transform:scale(1);opacity:1} }
+  @keyframes countOut { to{transform:scale(0.4);opacity:0} }
+
+  .reveal-card {
+    background:white; border-radius:28px; padding:36px 32px; width:min(520px,92vw);
+    box-shadow:0 16px 60px rgba(30,43,74,0.16); display:none; flex-direction:column;
+    align-items:center;
+  }
+  .reveal-card.active { display:flex; animation:revealPop 0.7s cubic-bezier(.22,.68,0,1.2) both; }
+  @keyframes revealPop { 0%{transform:scale(0.6) translateY(40px);opacity:0} 70%{transform:scale(1.03) translateY(-4px);opacity:1} 100%{transform:scale(1) translateY(0);opacity:1} }
+
+  .reveal-points-wrap {
+    width:100px; height:100px; border-radius:50%; background:var(--navy);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    margin-bottom:20px; animation:pointsPulse 2.5s ease-in-out infinite;
+    box-shadow:0 6px 30px rgba(30,43,74,0.25);
+  }
+  @keyframes pointsPulse { 0%,100%{box-shadow:0 6px 30px rgba(30,43,74,0.25)} 50%{box-shadow:0 8px 50px rgba(30,43,74,0.42)} }
+  .reveal-pts { font-family:'Cinzel',serif; font-size:36px; color:white; font-weight:600; line-height:1; }
+  .reveal-pts-label { font-size:9px; color:rgba(255,255,255,0.65); letter-spacing:3px; margin-top:3px; }
+
+  @keyframes slideIn { from{transform:translateY(14px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+  .reveal-title { font-size:22px; font-weight:500; color:var(--navy); margin-bottom:8px; text-align:center; animation:slideIn 0.5s 0.1s both; }
+  .reveal-msg { font-size:13px; color:var(--navy-light); margin-bottom:20px; text-align:center; line-height:1.8; animation:slideIn 0.5s 0.2s both; }
+
+  .reveal-numbers { display:flex; gap:12px; margin-bottom:20px; animation:slideIn 0.5s 0.3s both; }
+  .reveal-num-item { text-align:center; background:var(--bg); border-radius:12px; padding:12px 16px; min-width:72px; }
+  .reveal-num-label { font-size:10px; color:var(--navy-pale); letter-spacing:2px; margin-bottom:4px; }
+  .reveal-num-val { font-family:'Cinzel',serif; font-size:22px; color:var(--navy); font-weight:600; }
+
+  .compare-wrap { width:100%; margin-bottom:22px; animation:slideIn 0.5s 0.4s both; }
+  .compare-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--navy-pale); margin-bottom:6px; letter-spacing:1px; }
+  .compare-bar { position:relative; height:10px; background:var(--bg2); border-radius:5px; border:1px solid var(--border); overflow:visible; }
+  .compare-target-m { position:absolute; top:50%; transform:translate(-50%,-50%); width:4px; height:24px; background:var(--gold); border-radius:2px; left:50%; transition:left 0.9s cubic-bezier(.22,.68,0,1.3); }
+  .compare-guess-m { position:absolute; top:50%; transform:translate(-50%,-50%); width:22px; height:22px; background:var(--navy); border-radius:50%; border:3px solid white; box-shadow:0 2px 10px rgba(30,43,74,0.3); left:50%; transition:left 0.9s 0.2s cubic-bezier(.22,.68,0,1.3); }
+  .compare-legend { display:flex; gap:16px; margin-top:8px; font-size:10px; color:var(--navy-pale); justify-content:center; }
+  .legend-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+
+  .reveal-scoreboard { display:flex; gap:10px; width:100%; margin-bottom:20px; animation:slideIn 0.5s 0.5s both; }
+  .reveal-team { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; }
+  .reveal-team-name { font-size:11px; color:var(--navy-pale); letter-spacing:2px; margin-bottom:4px; }
+  .reveal-team-score { font-family:'Cinzel',serif; font-size:26px; color:var(--navy); }
+
+  .reveal-btn-wrap { display:flex; flex-direction:column; gap:10px; width:100%; animation:slideIn 0.5s 0.6s both; }
+
+  /* END */
+  .winner-display { text-align:center; padding:10px 0 20px; }
+  .trophy { font-size:52px; margin-bottom:14px; display:block; animation:floatY 3s ease-in-out infinite; }
+  .final-scores { display:flex; gap:12px; margin-top:20px; }
+  .final-score { flex:1; background:var(--bg); border:1.5px solid var(--border); border-radius:16px; padding:18px; text-align:center; }
+  .final-score.winner { background:#e8f0ff; border-color:var(--navy-mid); }
+  .final-score-name { font-size:12px; color:var(--navy-pale); letter-spacing:2px; margin-bottom:6px; }
+  .final-score-num { font-family:'Cinzel',serif; font-size:38px; color:var(--navy); }
+
+  .phase { display:none; }
+  .phase.active { display:block; animation:fadeUp 0.55s cubic-bezier(.22,.68,0,1.2) both; }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <div class="header">
+    <div class="moon-deco">☽ ✦ ☾</div>
+    <div class="title">Wavelength</div>
+    <div class="title-jp">ウェーブレングス</div>
+  </div>
+
+  <!-- PHASE 0: チーム名入力 -->
+  <div class="phase active" id="phase-setup">
+    <div class="card">
+      <div class="step-label">準備 ✦ チーム名</div>
+      <h2>チーム名を入力してください</h2>
+      <p class="prompt-text">2チームで対戦します。それぞれの名前を入力しましょう！</p>
+      <div class="input-group">
+        <label class="input-label">お題を出すチーム（Aチーム）</label>
+        <input type="text" id="team-a-name" placeholder="例：月のチーム" maxlength="20">
+      </div>
+      <div class="input-group">
+        <label class="input-label">数字を当てるチーム（Bチーム）</label>
+        <input type="text" id="team-b-name" placeholder="例：星のチーム" maxlength="20">
+      </div>
+      <button class="btn" onclick="startGame()">✦ ゲームをはじめる</button>
+    </div>
+  </div>
+
+  <!-- PHASE A -->
+  <div class="phase" id="phase-a">
+    <div class="card">
+      <div class="round-badge" id="round-badge-a">Round 1 / 5</div>
+      <div class="scoreboard">
+        <div class="team-score" id="sb-a-wrap">
+          <div class="team-name-display" id="sb-a-name">チームA</div>
+          <div class="score-num" id="sb-a-score">0</div>
+        </div>
+        <div class="team-score" id="sb-b-wrap">
+          <div class="team-name-display" id="sb-b-name">チームB</div>
+          <div class="score-num" id="sb-b-score">0</div>
+        </div>
+      </div>
+      <div class="step-label">Step 1 ✦ 数字を設定</div>
+      <h2 id="a-heading">チームA、正解の数字を設定してください</h2>
+      <p class="prompt-text" id="a-prompt">アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>Bチームは目を閉じて</strong>もらいましょう 👁</p>
+      <div class="topic-box">
+        <div class="topic-ends">
+          <span>← お題A（左端）</span>
+          <span>お題B（右端） →</span>
+        </div>
+        <div class="topic-arrow">1 ←—————————→ 100</div>
+      </div>
+      <div class="dial-section">
+        <div class="dial-label">スライドして数字を設定（1〜100）</div>
+        <input type="range" id="slider-a" min="1" max="100" value="50" oninput="updateSlider('a',this.value)">
+        <div class="dial-value" id="value-a">50</div>
+        <div class="dial-ticks">
+          <span class="tick">◁ お題A</span>
+          <span class="tick">中央</span>
+          <span class="tick">お題B ▷</span>
+        </div>
+      </div>
+      <button class="btn" onclick="confirmA()">✦ この数字に決める（Bチームに渡す）</button>
+    </div>
+  </div>
+
+  <!-- PHASE B -->
+  <div class="phase" id="phase-b">
+    <div class="card">
+      <div class="step-label">Step 2 ✦ 数字を当てる</div>
+      <h2 id="b-heading">チームB、数字を当ててください！</h2>
+      <p class="prompt-text" id="b-prompt">Aチームが設定した数字を当ててください。スケール上のどのあたりでしょう？</p>
+      <div class="topic-box">
+        <div class="topic-ends">
+          <span>← お題A（左端）</span>
+          <span>お題B（右端） →</span>
+        </div>
+        <div class="topic-arrow">1 ←—————————→ 100</div>
+      </div>
+      <div class="score-zones">
+        <div class="zone zone-1">1pt</div>
+        <div class="zone zone-2">2pt</div>
+        <div class="zone zone-3">3pt</div>
+        <div class="zone zone-4">4pt</div>
+        <div class="zone zone-4">4pt</div>
+        <div class="zone zone-3">3pt</div>
+        <div class="zone zone-2">2pt</div>
+        <div class="zone zone-1">1pt</div>
+      </div>
+      <div class="dial-section">
+        <div class="dial-label">スライドして予測（1〜100）</div>
+        <input type="range" id="slider-b" min="1" max="100" value="50" oninput="updateSlider('b',this.value)">
+        <div class="dial-value" id="value-b">50</div>
+        <div class="dial-ticks">
+          <span class="tick">◁ お題A</span>
+          <span class="tick">中央</span>
+          <span class="tick">お題B ▷</span>
+        </div>
+      </div>
+      <button class="btn" onclick="confirmB()">✦ この数字で決定！</button>
+    </div>
+  </div>
+
+  <!-- PHASE END -->
+  <div class="phase" id="phase-end">
+    <div class="card">
+      <div class="step-label">Final ✦ ゲーム終了</div>
+      <div class="winner-display">
+        <span class="trophy">🌙</span>
+        <h2 id="winner-name" style="font-size:20px;letter-spacing:3px">チームBの勝利！</h2>
+        <p class="prompt-text" style="margin-top:8px" id="winner-message">素晴らしい感受性でした！</p>
+      </div>
+      <div class="final-scores">
+        <div class="final-score" id="final-a">
+          <div class="final-score-name" id="final-a-name">チームA</div>
+          <div class="final-score-num" id="final-a-score">0</div>
+        </div>
+        <div class="final-score" id="final-b">
+          <div class="final-score-name" id="final-b-name">チームB</div>
+          <div class="final-score-num" id="final-b-score">0</div>
+        </div>
+      </div>
+      <button class="btn" style="margin-top:28px" onclick="resetGame()">✦ もう一度遊ぶ</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="result-overlay" id="result-overlay">
+  <div class="countdown-num" id="countdown-num">3</div>
+  <div class="reveal-card" id="reveal-card">
+    <div class="reveal-points-wrap">
+      <div class="reveal-pts" id="reveal-pts">0</div>
+      <div class="reveal-pts-label">POINTS</div>
+    </div>
+    <div class="reveal-title" id="reveal-title">いい線！</div>
+    <div class="reveal-msg" id="reveal-msg">もう少しでした！</div>
+    <div class="reveal-numbers">
+      <div class="reveal-num-item"><div class="reveal-num-label">正解</div><div class="reveal-num-val" id="r-target">—</div></div>
+      <div class="reveal-num-item"><div class="reveal-num-label">回答</div><div class="reveal-num-val" id="r-guess">—</div></div>
+      <div class="reveal-num-item"><div class="reveal-num-label">差</div><div class="reveal-num-val" id="r-diff">—</div></div>
+    </div>
+    <div class="compare-wrap">
+      <div class="compare-labels"><span>← お題A</span><span>お題B →</span></div>
+      <div class="compare-bar">
+        <div class="compare-target-m" id="r-target-m"></div>
+        <div class="compare-guess-m" id="r-guess-m"></div>
+      </div>
+      <div class="compare-legend">
+        <span><span class="legend-dot" style="background:var(--gold)"></span>正解</span>
+        <span><span class="legend-dot" style="background:var(--navy)"></span>回答</span>
+      </div>
+    </div>
+    <div class="reveal-scoreboard">
+      <div class="reveal-team"><div class="reveal-team-name" id="r-a-name">チームA</div><div class="reveal-team-score" id="r-a-score">0</div></div>
+      <div class="reveal-team"><div class="reveal-team-name" id="r-b-name">チームB</div><div class="reveal-team-score" id="r-b-score">0</div></div>
+    </div>
+    <div class="reveal-btn-wrap">
+      <button class="btn" id="r-next-btn" onclick="nextRound()">次のラウンドへ ✦</button>
+      <button class="btn btn-ghost" onclick="endGame()">ゲームを終了する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// particles
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div'); p.className='particle';
+    const s=Math.random()*4+2;
+    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${40+Math.random()*60}%;--dur:${10+Math.random()*14}s;--del:${Math.random()*10}s`;
+    c.appendChild(p);
+  }
+})();
+
+let state={teamA:"チームA",teamB:"チームB",scoreA:0,scoreB:0,round:1,totalRounds:5,targetValue:50,guessValue:50};
+
+function showPhase(id){
+  document.querySelectorAll('.phase').forEach(p=>p.classList.remove('active'));
+  const el=document.getElementById('phase-'+id);
+  el.classList.add('active');
+  el.style.animation='none'; el.offsetHeight; el.style.animation='';
+}
+
+function startGame(){
+  state.teamA=document.getElementById('team-a-name').value.trim()||"チームA";
+  state.teamB=document.getElementById('team-b-name').value.trim()||"チームB";
+  state.scoreA=0; state.scoreB=0; state.round=1;
+  showPhaseA();
+}
+
+function showPhaseA(){
+  updateSB();
+  document.getElementById('round-badge-a').textContent=`Round ${state.round} / ${state.totalRounds}`;
+  document.getElementById('a-heading').textContent=`${state.teamA}、正解の数字を設定してください ✨`;
+  document.getElementById('a-prompt').innerHTML=`アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>${state.teamB}は目を閉じて</strong>もらいましょう 👁`;
+  document.getElementById('slider-a').value=50;
+  document.getElementById('value-a').textContent=50;
+  showPhase('a');
+}
+
+function updateSlider(t,v){
+  const el=document.getElementById('value-'+t);
+  el.textContent=v;
+  el.classList.remove('num-pop'); el.offsetHeight; el.classList.add('num-pop');
+}
+
+function confirmA(){
+  state.targetValue=parseInt(document.getElementById('slider-a').value);
+  document.getElementById('b-heading').textContent=`${state.teamB}、数字を当ててください！ 🌙`;
+  document.getElementById('b-prompt').textContent=`${state.teamA}が設定した数字を当ててください。スケール上のどのあたりでしょう？`;
+  document.getElementById('slider-b').value=50;
+  document.getElementById('value-b').textContent=50;
+  showPhase('b');
+}
+
+function confirmB(){
+  state.guessValue=parseInt(document.getElementById('slider-b').value);
+  startCountdown();
+}
+
+function calcPoints(t,g){
+  const d=Math.abs(t-g);
+  if(d<=3)return 4; if(d<=7)return 3; if(d<=15)return 2; if(d<=25)return 1; return 0;
+}
+
+function startCountdown(){
+  const overlay=document.getElementById('result-overlay');
+  const numEl=document.getElementById('countdown-num');
+  const card=document.getElementById('reveal-card');
+  overlay.classList.add('active');
+  card.classList.remove('active');
+  numEl.style.display='block';
+  let count=3;
+
+  function showCount(n){
+    numEl.textContent=n;
+    numEl.style.animation='none'; numEl.offsetHeight; numEl.style.animation='countIn 0.7s cubic-bezier(.22,.68,0,1.5) both';
+  }
+  showCount(count);
+
+  const iv=setInterval(()=>{
+    numEl.style.animation='countOut 0.3s ease both';
+    setTimeout(()=>{
+      count--;
+      if(count<=0){
+        clearInterval(iv);
+        numEl.style.display='none';
+        showRevealCard();
+      } else {
+        showCount(count);
+      }
+    },310);
+  },950);
+}
+
+function showRevealCard(){
+  const target=state.targetValue, guess=state.guessValue;
+  const diff=Math.abs(target-guess), pts=calcPoints(target,guess);
+  state.scoreB+=pts;
+
+  const titles=['残念…！','もう少し！','いい線いってる！','かなり惜しい！','完璧！ 🎉'];
+  const msgs=[
+    `差は ${diff}。次は感覚を研ぎ澄ませて…`,
+    `差は ${diff}。もう少しで届きそう！`,
+    `差は ${diff}。なかなか近い！`,
+    `差は ${diff}。あと少しだった！`,
+    `差は ${diff}！ 魂が共鳴しました ✨`,
+  ];
+
+  document.getElementById('reveal-pts').textContent=pts;
+  document.getElementById('reveal-title').textContent=titles[pts];
+  document.getElementById('reveal-msg').textContent=msgs[pts];
+  document.getElementById('r-target').textContent=target;
+  document.getElementById('r-guess').textContent=guess;
+  document.getElementById('r-diff').textContent=diff;
+  document.getElementById('r-a-name').textContent=state.teamA;
+  document.getElementById('r-b-name').textContent=state.teamB;
+  document.getElementById('r-a-score').textContent=state.scoreA;
+  document.getElementById('r-b-score').textContent=state.scoreB;
+
+  const card=document.getElementById('reveal-card');
+  card.classList.add('active');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='revealPop 0.7s cubic-bezier(.22,.68,0,1.2) both';
+
+  // reset markers first
+  document.getElementById('r-target-m').style.transition='none';
+  document.getElementById('r-guess-m').style.transition='none';
+  document.getElementById('r-target-m').style.left='50%';
+  document.getElementById('r-guess-m').style.left='50%';
+
+  setTimeout(()=>{
+    document.getElementById('r-target-m').style.transition='left 0.9s cubic-bezier(.22,.68,0,1.3)';
+    document.getElementById('r-guess-m').style.transition='left 0.9s 0.2s cubic-bezier(.22,.68,0,1.3)';
+    document.getElementById('r-target-m').style.left=((target-1)/99*100)+'%';
+    document.getElementById('r-guess-m').style.left=((guess-1)/99*100)+'%';
+  },300);
+
+  document.getElementById('r-next-btn').textContent=state.round>=state.totalRounds?'結果を見る ✦':'次のラウンドへ ✦';
+}
+
+function updateSB(){
+  document.getElementById('sb-a-name').textContent=state.teamA;
+  document.getElementById('sb-b-name').textContent=state.teamB;
+  document.getElementById('sb-a-score').textContent=state.scoreA;
+  document.getElementById('sb-b-score').textContent=state.scoreB;
+}
+
+function nextRound(){
+  document.getElementById('result-overlay').classList.remove('active');
+  if(state.round>=state.totalRounds){ showEndGame(); return; }
+  state.round++;
+  showPhaseA();
+}
+
+function endGame(){
+  document.getElementById('result-overlay').classList.remove('active');
+  showEndGame();
+}
+
+function showEndGame(){
+  document.getElementById('final-a-name').textContent=state.teamA;
+  document.getElementById('final-b-name').textContent=state.teamB;
+  document.getElementById('final-a-score').textContent=state.scoreA;
+  document.getElementById('final-b-score').textContent=state.scoreB;
+  document.getElementById('final-a').classList.remove('winner');
+  document.getElementById('final-b').classList.remove('winner');
+
+  if(state.scoreB>state.scoreA){
+    document.getElementById('final-b').classList.add('winner');
+    document.getElementById('winner-name').textContent=`${state.teamB} の勝利！ 🌙`;
+    document.getElementById('winner-message').textContent=`${state.teamA}との波長を見事に読み切りました！`;
+  } else if(state.scoreA>state.scoreB){
+    document.getElementById('final-a').classList.add('winner');
+    document.getElementById('winner-name').textContent=`${state.teamA} の勝利！`;
+    document.getElementById('winner-message').textContent=`${state.teamB}、次回は逆転を！`;
+  } else {
+    document.getElementById('winner-name').textContent=`引き分け！ ✦`;
+    document.getElementById('winner-message').textContent=`ふたつの魂が完全に共鳴した…！`;
+  }
+  showPhase('end');
+}
+
+function resetGame(){
+  state={teamA:"チームA",teamB:"チームB",scoreA:0,scoreB:0,round:1,totalRounds:5,targetValue:50,guessValue:50};
+  document.getElementById('team-a-name').value='';
+  document.getElementById('team-b-name').value='';
+  document.getElementById('result-overlay').classList.remove('active');
+  showPhase('setup');
+}
+</script>
+</body>
+</html>
