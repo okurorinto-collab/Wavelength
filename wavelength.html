@@ -264,14 +264,6 @@
       </div>
       <div class="step-label">Step 1 ✦ 数字を設定</div>
       <h2 id="a-heading">チームA、正解の数字を設定してください</h2>
-      <p class="prompt-text" id="a-prompt">アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>相手チームは目を閉じて</strong>もらいましょう 👁</p>
-      <div class="topic-box">
-        <div class="topic-ends">
-          <span>← お題A（左端）</span>
-          <span>お題B（右端） →</span>
-        </div>
-        <div class="topic-arrow">1 ←—————————→ 100</div>
-      </div>
       <div class="dial-section">
         <div class="dial-label">スライドして数字を設定（1〜100）</div>
         <input type="range" id="slider-a" min="1" max="100" value="50" oninput="updateSlider('a',this.value)">
@@ -292,13 +284,6 @@
       <div class="step-label">Step 2 ✦ 数字を当てる</div>
       <h2 id="b-heading">チームB、数字を当ててください</h2>
       <p class="prompt-text" id="b-prompt">相手チームが設定した数字を当ててください。スケール上のどのあたりでしょう？</p>
-      <div class="topic-box">
-        <div class="topic-ends">
-          <span>← お題A（左端）</span>
-          <span>お題B（右端） →</span>
-        </div>
-        <div class="topic-arrow">1 ←—————————→ 100</div>
-      </div>
       <div class="score-zones">
         <div class="zone zone-1">1pt</div>
         <div class="zone zone-2">2pt</div>
@@ -415,8 +400,7 @@ function startGame(){
 function showPhaseA(){
   updateSB();
   document.getElementById('round-badge-a').textContent=`Round ${state.round} / ${state.totalRounds}`;
-  document.getElementById('a-heading').textContent=`${state.teamA}、正解の数字を設定してください ✨`;
-  document.getElementById('a-prompt').innerHTML=`アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>${state.teamB}は目を閉じて</strong>もらいましょう 👁`;
+  document.getElementById('a-heading').textContent=`${state.teamA}、正解の数字を設定してください`;
   document.getElementById('slider-a').value=50;
   document.getElementById('value-a').textContent=50;
   showPhase('a');
@@ -430,7 +414,7 @@ function updateSlider(t,v){
 
 function confirmA(){
   state.targetValue=parseInt(document.getElementById('slider-a').value);
-  document.getElementById('b-heading').textContent=`${state.teamB}、数字を当ててください 🌙`;
+  document.getElementById('b-heading').textContent=`${state.teamB}、数字を当ててください`;
   document.getElementById('b-prompt').textContent=`${state.teamA}が設定した数字を当ててください。スケール上のどのあたりでしょう？`;
   document.getElementById('slider-b').value=50;
   document.getElementById('value-b').textContent=50;
@@ -482,13 +466,13 @@ function showRevealCard(){
   const diff=Math.abs(target-guess), pts=calcPoints(target,guess);
   state.scoreB+=pts;
 
-  const titles=['残念…','もう少し','いい線いってる','かなり惜しい','完璧 🎉'];
+  const titles=['残念…','もう少し','いい線いってる','かなり惜しい','完璧'];
   const msgs=[
     `差は ${diff}。次は感覚を研ぎ澄ませて…`,
     `差は ${diff}。もう少しで届きそう。`,
     `差は ${diff}。なかなか近い。`,
     `差は ${diff}。あと少しだった。`,
-    `差は ${diff}。魂が共鳴しました ✨`,
+    `差は ${diff}。魂が共鳴しました`,
   ];
 
   document.getElementById('reveal-pts').textContent=pts;
@@ -551,14 +535,14 @@ function showEndGame(){
 
   if(state.scoreB>state.scoreA){
     document.getElementById('final-b').classList.add('winner');
-    document.getElementById('winner-name').textContent=`${state.teamB} の勝利 🌙`;
+    document.getElementById('winner-name').textContent=`${state.teamB} の勝利`;
     document.getElementById('winner-message').textContent=`${state.teamA}との波長を見事に読み切りました。`;
   } else if(state.scoreA>state.scoreB){
     document.getElementById('final-a').classList.add('winner');
     document.getElementById('winner-name').textContent=`${state.teamA} の勝利`;
     document.getElementById('winner-message').textContent=`${state.teamB}、次回は逆転を。`;
   } else {
-    document.getElementById('winner-name').textContent=`引き分け ✦`;
+    document.getElementById('winner-name').textContent=`引き分け`;
     document.getElementById('winner-message').textContent=`ふたつの魂が完全に共鳴した…`;
   }
   showPhase('end');
