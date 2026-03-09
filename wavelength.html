@@ -147,7 +147,6 @@
   .zone-2 { background:var(--navy-pale); color:white; }
   .zone-1 { background:var(--bg2); color:var(--navy-pale); border:1px solid var(--border); }
 
-  /* ===== RESULT OVERLAY ===== */
   .result-overlay {
     display:none; position:fixed; inset:0; z-index:100;
     align-items:center; justify-content:center; flex-direction:column;
@@ -206,7 +205,6 @@
 
   .reveal-btn-wrap { display:flex; flex-direction:column; gap:10px; width:100%; animation:slideIn 0.5s 0.6s both; }
 
-  /* END */
   .winner-display { text-align:center; padding:10px 0 20px; }
   .trophy { font-size:52px; margin-bottom:14px; display:block; animation:floatY 3s ease-in-out infinite; }
   .final-scores { display:flex; gap:12px; margin-top:20px; }
@@ -230,7 +228,6 @@
     <div class="title-jp">ウェーブレングス</div>
   </div>
 
-  <!-- PHASE 0: チーム名入力 -->
   <div class="phase active" id="phase-setup">
     <div class="card">
       <div class="step-label">準備 ✦ チーム名</div>
@@ -248,7 +245,6 @@
     </div>
   </div>
 
-  <!-- PHASE A -->
   <div class="phase" id="phase-a">
     <div class="card">
       <div class="round-badge" id="round-badge-a">Round 1 / 5</div>
@@ -286,7 +282,6 @@
     </div>
   </div>
 
-  <!-- PHASE B -->
   <div class="phase" id="phase-b">
     <div class="card">
       <div class="step-label">Step 2 ✦ 数字を当てる</div>
@@ -323,7 +318,6 @@
     </div>
   </div>
 
-  <!-- PHASE END -->
   <div class="phase" id="phase-end">
     <div class="card">
       <div class="step-label">Final ✦ ゲーム終了</div>
@@ -347,7 +341,6 @@
   </div>
 </div>
 
-<!-- RESULT OVERLAY -->
 <div class="result-overlay" id="result-overlay">
   <div class="countdown-num" id="countdown-num">3</div>
   <div class="reveal-card" id="reveal-card">
@@ -360,217 +353,3 @@
     <div class="reveal-numbers">
       <div class="reveal-num-item"><div class="reveal-num-label">正解</div><div class="reveal-num-val" id="r-target">—</div></div>
       <div class="reveal-num-item"><div class="reveal-num-label">回答</div><div class="reveal-num-val" id="r-guess">—</div></div>
-      <div class="reveal-num-item"><div class="reveal-num-label">差</div><div class="reveal-num-val" id="r-diff">—</div></div>
-    </div>
-    <div class="compare-wrap">
-      <div class="compare-labels"><span>← お題A</span><span>お題B →</span></div>
-      <div class="compare-bar">
-        <div class="compare-target-m" id="r-target-m"></div>
-        <div class="compare-guess-m" id="r-guess-m"></div>
-      </div>
-      <div class="compare-legend">
-        <span><span class="legend-dot" style="background:var(--gold)"></span>正解</span>
-        <span><span class="legend-dot" style="background:var(--navy)"></span>回答</span>
-      </div>
-    </div>
-    <div class="reveal-scoreboard">
-      <div class="reveal-team"><div class="reveal-team-name" id="r-a-name">チームA</div><div class="reveal-team-score" id="r-a-score">0</div></div>
-      <div class="reveal-team"><div class="reveal-team-name" id="r-b-name">チームB</div><div class="reveal-team-score" id="r-b-score">0</div></div>
-    </div>
-    <div class="reveal-btn-wrap">
-      <button class="btn" id="r-next-btn" onclick="nextRound()">次のラウンドへ ✦</button>
-      <button class="btn btn-ghost" onclick="endGame()">ゲームを終了する</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// particles
-(function(){
-  const c=document.getElementById('particles');
-  for(let i=0;i<20;i++){
-    const p=document.createElement('div'); p.className='particle';
-    const s=Math.random()*4+2;
-    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${40+Math.random()*60}%;--dur:${10+Math.random()*14}s;--del:${Math.random()*10}s`;
-    c.appendChild(p);
-  }
-})();
-
-let state={teamA:"チームA",teamB:"チームB",scoreA:0,scoreB:0,round:1,totalRounds:5,targetValue:50,guessValue:50};
-
-function showPhase(id){
-  document.querySelectorAll('.phase').forEach(p=>p.classList.remove('active'));
-  const el=document.getElementById('phase-'+id);
-  el.classList.add('active');
-  el.style.animation='none'; el.offsetHeight; el.style.animation='';
-}
-
-function startGame(){
-  state.teamA=document.getElementById('team-a-name').value.trim()||"チームA";
-  state.teamB=document.getElementById('team-b-name').value.trim()||"チームB";
-  state.scoreA=0; state.scoreB=0; state.round=1;
-  showPhaseA();
-}
-
-function showPhaseA(){
-  updateSB();
-  document.getElementById('round-badge-a').textContent=`Round ${state.round} / ${state.totalRounds}`;
-  document.getElementById('a-heading').textContent=`${state.teamA}、正解の数字を設定してください ✨`;
-  document.getElementById('a-prompt').innerHTML=`アナログで決めたお題のスケール上で「正解の数字」を決めてください。<br>決まったら、<strong>${state.teamB}は目を閉じて</strong>もらいましょう 👁`;
-  document.getElementById('slider-a').value=50;
-  document.getElementById('value-a').textContent=50;
-  showPhase('a');
-}
-
-function updateSlider(t,v){
-  const el=document.getElementById('value-'+t);
-  el.textContent=v;
-  el.classList.remove('num-pop'); el.offsetHeight; el.classList.add('num-pop');
-}
-
-function confirmA(){
-  state.targetValue=parseInt(document.getElementById('slider-a').value);
-  document.getElementById('b-heading').textContent=`${state.teamB}、数字を当ててください！ 🌙`;
-  document.getElementById('b-prompt').textContent=`${state.teamA}が設定した数字を当ててください。スケール上のどのあたりでしょう？`;
-  document.getElementById('slider-b').value=50;
-  document.getElementById('value-b').textContent=50;
-  showPhase('b');
-}
-
-function confirmB(){
-  state.guessValue=parseInt(document.getElementById('slider-b').value);
-  startCountdown();
-}
-
-function calcPoints(t,g){
-  const d=Math.abs(t-g);
-  if(d<=3)return 4; if(d<=7)return 3; if(d<=15)return 2; if(d<=25)return 1; return 0;
-}
-
-function startCountdown(){
-  const overlay=document.getElementById('result-overlay');
-  const numEl=document.getElementById('countdown-num');
-  const card=document.getElementById('reveal-card');
-  overlay.classList.add('active');
-  card.classList.remove('active');
-  numEl.style.display='block';
-  let count=3;
-
-  function showCount(n){
-    numEl.textContent=n;
-    numEl.style.animation='none'; numEl.offsetHeight; numEl.style.animation='countIn 0.7s cubic-bezier(.22,.68,0,1.5) both';
-  }
-  showCount(count);
-
-  const iv=setInterval(()=>{
-    numEl.style.animation='countOut 0.3s ease both';
-    setTimeout(()=>{
-      count--;
-      if(count<=0){
-        clearInterval(iv);
-        numEl.style.display='none';
-        showRevealCard();
-      } else {
-        showCount(count);
-      }
-    },310);
-  },950);
-}
-
-function showRevealCard(){
-  const target=state.targetValue, guess=state.guessValue;
-  const diff=Math.abs(target-guess), pts=calcPoints(target,guess);
-  state.scoreB+=pts;
-
-  const titles=['残念…！','もう少し！','いい線いってる！','かなり惜しい！','完璧！ 🎉'];
-  const msgs=[
-    `差は ${diff}。次は感覚を研ぎ澄ませて…`,
-    `差は ${diff}。もう少しで届きそう！`,
-    `差は ${diff}。なかなか近い！`,
-    `差は ${diff}。あと少しだった！`,
-    `差は ${diff}！ 魂が共鳴しました ✨`,
-  ];
-
-  document.getElementById('reveal-pts').textContent=pts;
-  document.getElementById('reveal-title').textContent=titles[pts];
-  document.getElementById('reveal-msg').textContent=msgs[pts];
-  document.getElementById('r-target').textContent=target;
-  document.getElementById('r-guess').textContent=guess;
-  document.getElementById('r-diff').textContent=diff;
-  document.getElementById('r-a-name').textContent=state.teamA;
-  document.getElementById('r-b-name').textContent=state.teamB;
-  document.getElementById('r-a-score').textContent=state.scoreA;
-  document.getElementById('r-b-score').textContent=state.scoreB;
-
-  const card=document.getElementById('reveal-card');
-  card.classList.add('active');
-  card.style.animation='none'; card.offsetHeight; card.style.animation='revealPop 0.7s cubic-bezier(.22,.68,0,1.2) both';
-
-  // reset markers first
-  document.getElementById('r-target-m').style.transition='none';
-  document.getElementById('r-guess-m').style.transition='none';
-  document.getElementById('r-target-m').style.left='50%';
-  document.getElementById('r-guess-m').style.left='50%';
-
-  setTimeout(()=>{
-    document.getElementById('r-target-m').style.transition='left 0.9s cubic-bezier(.22,.68,0,1.3)';
-    document.getElementById('r-guess-m').style.transition='left 0.9s 0.2s cubic-bezier(.22,.68,0,1.3)';
-    document.getElementById('r-target-m').style.left=((target-1)/99*100)+'%';
-    document.getElementById('r-guess-m').style.left=((guess-1)/99*100)+'%';
-  },300);
-
-  document.getElementById('r-next-btn').textContent=state.round>=state.totalRounds?'結果を見る ✦':'次のラウンドへ ✦';
-}
-
-function updateSB(){
-  document.getElementById('sb-a-name').textContent=state.teamA;
-  document.getElementById('sb-b-name').textContent=state.teamB;
-  document.getElementById('sb-a-score').textContent=state.scoreA;
-  document.getElementById('sb-b-score').textContent=state.scoreB;
-}
-
-function nextRound(){
-  document.getElementById('result-overlay').classList.remove('active');
-  if(state.round>=state.totalRounds){ showEndGame(); return; }
-  state.round++;
-  showPhaseA();
-}
-
-function endGame(){
-  document.getElementById('result-overlay').classList.remove('active');
-  showEndGame();
-}
-
-function showEndGame(){
-  document.getElementById('final-a-name').textContent=state.teamA;
-  document.getElementById('final-b-name').textContent=state.teamB;
-  document.getElementById('final-a-score').textContent=state.scoreA;
-  document.getElementById('final-b-score').textContent=state.scoreB;
-  document.getElementById('final-a').classList.remove('winner');
-  document.getElementById('final-b').classList.remove('winner');
-
-  if(state.scoreB>state.scoreA){
-    document.getElementById('final-b').classList.add('winner');
-    document.getElementById('winner-name').textContent=`${state.teamB} の勝利！ 🌙`;
-    document.getElementById('winner-message').textContent=`${state.teamA}との波長を見事に読み切りました！`;
-  } else if(state.scoreA>state.scoreB){
-    document.getElementById('final-a').classList.add('winner');
-    document.getElementById('winner-name').textContent=`${state.teamA} の勝利！`;
-    document.getElementById('winner-message').textContent=`${state.teamB}、次回は逆転を！`;
-  } else {
-    document.getElementById('winner-name').textContent=`引き分け！ ✦`;
-    document.getElementById('winner-message').textContent=`ふたつの魂が完全に共鳴した…！`;
-  }
-  showPhase('end');
-}
-
-function resetGame(){
-  state={teamA:"チームA",teamB:"チームB",scoreA:0,scoreB:0,round:1,totalRounds:5,targetValue:50,guessValue:50};
-  document.getElementById('team-a-name').value='';
-  document.getElementById('team-b-name').value='';
-  document.getElementById('result-overlay').classList.remove('active');
-  showPhase('setup');
-}
-</script>
-</body>
-</html>
