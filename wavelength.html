@@ -224,6 +224,7 @@
   .final-score-name { font-size:12px; color:var(--navy-pale); letter-spacing:2px; margin-bottom:6px; }
   .final-score-num { font-family:'Cinzel',serif; font-size:38px; color:var(--navy); }
 
+  .input-error { display:none; font-size:11px; color:#c0392b; margin-top:6px; letter-spacing:1px; }
   .phase { display:none; }
   .phase.active { display:block; animation:fadeUp 0.55s cubic-bezier(.22,.68,0,1.2) both; }
 </style>
@@ -247,10 +248,12 @@
       <div class="input-group">
         <label class="input-label">出題チーム</label>
         <input type="text" id="team-a-name" placeholder="例：月のチーム" maxlength="20">
+        <span class="input-error" id="err-a">チーム名を入力してください</span>
       </div>
       <div class="input-group">
         <label class="input-label">回答チーム</label>
         <input type="text" id="team-b-name" placeholder="例：星のチーム" maxlength="20">
+        <span class="input-error" id="err-b">チーム名を入力してください</span>
       </div>
       <button class="btn" onclick="startGame()">心理の扉を開く...</button>
     </div>
@@ -409,8 +412,14 @@ function showPhase(id){
 }
 
 function startGame(){
-  state.teamA=document.getElementById('team-a-name').value.trim()||"出題チーム";
-  state.teamB=document.getElementById('team-b-name').value.trim()||"回答チーム";
+  const a=document.getElementById('team-a-name').value.trim();
+  const b=document.getElementById('team-b-name').value.trim();
+  const errA=document.getElementById('err-a');
+  const errB=document.getElementById('err-b');
+  errA.style.display = a ? 'none' : 'block';
+  errB.style.display = b ? 'none' : 'block';
+  if(!a || !b) return;
+  state.teamA=a; state.teamB=b;
   state.scoreA=0; state.scoreB=0; state.round=1;
   showPhaseA();
 }
@@ -523,10 +532,9 @@ function showRevealCard(){
 }
 
 function updateSB(){
-  document.getElementById('sb-a-name').textContent=state.teamA;
-  document.getElementById('sb-b-name').textContent=state.teamB;
-  document.getElementById('sb-a-score').textContent=state.scoreA;
-  document.getElementById('sb-b-score').textContent=state.scoreB;
+  const set=(id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
+  set('sb-a-name',state.teamA); set('sb-b-name',state.teamB);
+  set('sb-a-score',state.scoreA); set('sb-b-score',state.scoreB);
 }
 
 function swapTeams(){
