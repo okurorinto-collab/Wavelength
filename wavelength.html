@@ -14,7 +14,6 @@
     --navy-light: #4a5f8a;
     --navy-pale: #8090b8;
     --gold: #b8923a;
-    --gold-light: #d4aa55;
     --white: #ffffff;
     --border: rgba(30,43,74,0.12);
   }
@@ -34,10 +33,7 @@
 
   .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
   .particle {
-    position: absolute;
-    border-radius: 50%;
-    background: var(--navy-pale);
-    opacity: 0;
+    position: absolute; border-radius: 50%; background: var(--navy-pale); opacity: 0;
     animation: drift var(--dur, 12s) ease-in-out var(--del, 0s) infinite;
   }
   @keyframes drift {
@@ -56,12 +52,9 @@
   .title-jp { font-size:12px; color:var(--navy-pale); letter-spacing:5px; margin-top:6px; }
 
   .card {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 36px 30px;
+    background: var(--white); border-radius: 24px; padding: 36px 30px;
     box-shadow: 0 4px 32px rgba(30,43,74,0.10), 0 1px 0 rgba(30,43,74,0.04);
-    border: 1px solid var(--border);
-    margin-bottom: 16px;
+    border: 1px solid var(--border); margin-bottom: 16px;
   }
 
   @keyframes fadeUp {
@@ -79,9 +72,10 @@
   }
   .step-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); }
 
-  .card h2 { font-family:'Noto Serif JP',serif; font-size:18px; font-weight:500; color:var(--navy); margin-bottom:10px; line-height:1.6; }
+  .card h2 { font-family:'Noto Serif JP',serif; font-size:18px; font-weight:500; color:var(--navy); margin-bottom:16px; line-height:1.7; }
   .prompt-text { font-size:13px; color:var(--navy-light); line-height:1.9; margin-bottom:20px; }
 
+  /* INPUT */
   .input-group { margin-bottom:18px; }
   .input-label { font-size:11px; color:var(--navy-pale); letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; display:block; }
   input[type="text"] {
@@ -92,6 +86,7 @@
   input[type="text"]:focus { border-color:var(--navy-mid); box-shadow:0 0 0 3px rgba(30,43,74,0.08); }
   input[type="text"]::placeholder { color:var(--navy-pale); }
 
+  /* BUTTONS */
   .btn {
     width:100%; padding:16px; background:var(--navy); border:none; border-radius:14px;
     color:var(--white); font-family:'Noto Serif JP',serif; font-size:14px; font-weight:500;
@@ -105,6 +100,10 @@
   .btn-ghost { background:transparent; border:1.5px solid var(--border); color:var(--navy-light); box-shadow:none; }
   .btn-ghost:hover { background:var(--bg); box-shadow:none; transform:translateY(-2px); }
 
+  /* ボタン内サブテキスト */
+  .btn-sub { display:block; font-size:10px; font-weight:400; opacity:0.65; letter-spacing:1px; margin-top:3px; }
+
+  /* SCOREBOARD */
   .scoreboard { display:flex; gap:10px; margin-bottom:24px; }
   .team-score { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; }
   @keyframes scoreBump { 0%{transform:scale(1)} 50%{transform:scale(1.12);background:#e8f0ff} 100%{transform:scale(1)} }
@@ -112,18 +111,8 @@
   .team-name-display { font-size:11px; color:var(--navy-pale); letter-spacing:2px; margin-bottom:4px; }
   .score-num { font-family:'Cinzel',serif; font-size:28px; color:var(--navy); font-weight:600; }
 
-  .round-badge {
-    display:inline-block; background:var(--bg); border:1px solid var(--border); border-radius:20px;
-    padding:5px 16px; font-size:11px; color:var(--navy-pale); letter-spacing:3px; margin-bottom:18px; font-family:'Cinzel',serif;
-  }
-
-  .topic-box { background:var(--bg); border:1px solid var(--border); border-radius:16px; padding:18px 20px; text-align:center; margin-bottom:24px; }
-  .topic-ends { display:flex; justify-content:space-between; font-size:11px; color:var(--navy-pale); letter-spacing:1px; margin-bottom:8px; }
-  .topic-arrow { font-size:12px; color:var(--navy-pale); letter-spacing:2px; }
-
+  /* SLIDER */
   .dial-section { margin-bottom:24px; }
-  .dial-label { font-size:12px; color:var(--navy-pale); letter-spacing:2px; text-align:center; margin-bottom:14px; }
-
   input[type="range"] { width:100%; -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer; margin:8px 0; }
   input[type="range"]::-webkit-slider-runnable-track { height:6px; background:var(--bg2); border-radius:3px; border:1px solid var(--border); }
   input[type="range"]::-webkit-slider-thumb {
@@ -133,21 +122,41 @@
   }
   input[type="range"]:active::-webkit-slider-thumb { cursor:grabbing; transform:scale(1.15); box-shadow:0 5px 20px rgba(30,43,74,0.4); }
 
+  .dial-label { font-size:12px; color:var(--navy-pale); letter-spacing:1px; margin-bottom:6px; }
   .dial-value { text-align:center; font-family:'Cinzel',serif; font-size:44px; color:var(--navy); font-weight:600; margin:6px 0 4px; }
   @keyframes numPop { 0%{transform:scale(0.85)} 60%{transform:scale(1.08)} 100%{transform:scale(1)} }
   .num-pop { animation:numPop 0.2s cubic-bezier(.22,.68,0,1.5) both; }
-
   .dial-ticks { display:flex; justify-content:space-between; padding:0 4px; margin-top:2px; }
   .tick { font-size:10px; color:var(--navy-pale); letter-spacing:1px; }
 
-  .score-zones { display:flex; gap:3px; margin-bottom:18px; height:24px; border-radius:12px; overflow:hidden; }
-  .zone { display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600; letter-spacing:1px; flex:1; }
-  .zone-4 { background:var(--navy); color:white; }
-  .zone-3 { background:var(--navy-mid); color:white; }
-  .zone-2 { background:var(--navy-pale); color:white; }
-  .zone-1 { background:var(--bg2); color:var(--navy-pale); border:1px solid var(--border); }
+  /* ポイント説明リンク */
+  .points-info-wrap { text-align:center; margin-bottom:18px; position:relative; }
+  .points-info-link {
+    font-size:11px; color:var(--navy-pale); cursor:pointer; text-decoration:underline;
+    text-underline-offset:3px; letter-spacing:1px; background:none; border:none; font-family:inherit;
+    padding:0; transition:color 0.2s;
+  }
+  .points-info-link:hover { color:var(--navy-light); }
+  .points-popup {
+    display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:var(--navy); color:var(--white); border-radius:14px; padding:16px 18px;
+    width:min(320px, 90vw); text-align:left; z-index:10;
+    box-shadow:0 8px 32px rgba(30,43,74,0.25); animation:popupIn 0.25s cubic-bezier(.22,.68,0,1.3) both;
+  }
+  .points-popup.visible { display:block; }
+  @keyframes popupIn { from{opacity:0;transform:translateX(-50%) translateY(8px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+  .points-popup::after {
+    content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:6px solid transparent; border-top-color:var(--navy);
+  }
+  .points-popup-title { font-family:'Cinzel',serif; font-size:11px; letter-spacing:3px; color:rgba(255,255,255,0.6); margin-bottom:10px; }
+  .points-popup table { width:100%; border-collapse:collapse; font-size:12px; }
+  .points-popup td { padding:4px 6px; }
+  .points-popup td:first-child { color:rgba(255,255,255,0.6); }
+  .points-popup td:last-child { text-align:right; font-family:'Cinzel',serif; color:white; }
+  .points-popup .popup-note { font-size:11px; color:rgba(255,255,255,0.5); margin-top:10px; line-height:1.7; }
 
-  /* ===== RESULT OVERLAY ===== */
+  /* RESULT OVERLAY */
   .result-overlay {
     display:none; position:fixed; inset:0; z-index:100;
     align-items:center; justify-content:center; flex-direction:column;
@@ -166,7 +175,7 @@
   .reveal-card {
     background:white; border-radius:28px; padding:36px 32px; width:min(520px,92vw);
     box-shadow:0 16px 60px rgba(30,43,74,0.16); display:none; flex-direction:column;
-    align-items:center;
+    align-items:center; max-height:90vh; overflow-y:auto;
   }
   .reveal-card.active { display:flex; animation:revealPop 0.7s cubic-bezier(.22,.68,0,1.2) both; }
   @keyframes revealPop { 0%{transform:scale(0.6) translateY(40px);opacity:0} 70%{transform:scale(1.03) translateY(-4px);opacity:1} 100%{transform:scale(1) translateY(0);opacity:1} }
@@ -175,7 +184,7 @@
     width:100px; height:100px; border-radius:50%; background:var(--navy);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     margin-bottom:20px; animation:pointsPulse 2.5s ease-in-out infinite;
-    box-shadow:0 6px 30px rgba(30,43,74,0.25);
+    box-shadow:0 6px 30px rgba(30,43,74,0.25); flex-shrink:0;
   }
   @keyframes pointsPulse { 0%,100%{box-shadow:0 6px 30px rgba(30,43,74,0.25)} 50%{box-shadow:0 8px 50px rgba(30,43,74,0.42)} }
   .reveal-pts { font-family:'Cinzel',serif; font-size:36px; color:white; font-weight:600; line-height:1; }
@@ -235,37 +244,24 @@
     <div class="card">
       <div class="step-label">準備 ✦ チーム名</div>
       <h2>チーム名を入力してください</h2>
-      <p class="prompt-text">2チームで対戦します。それぞれの名前を入力しましょう。</p>
       <div class="input-group">
-        <label class="input-label">お題を出すチーム</label>
+        <label class="input-label">出題チーム</label>
         <input type="text" id="team-a-name" placeholder="例：月のチーム" maxlength="20">
       </div>
       <div class="input-group">
-        <label class="input-label">数字を当てるチーム</label>
+        <label class="input-label">回答チーム</label>
         <input type="text" id="team-b-name" placeholder="例：星のチーム" maxlength="20">
       </div>
-      <button class="btn" onclick="startGame()">✦ ゲームをはじめる</button>
+      <button class="btn" onclick="startGame()">心理の扉を開く...</button>
     </div>
   </div>
 
-  <!-- PHASE A -->
+  <!-- PHASE A: 出題チーム -->
   <div class="phase" id="phase-a">
     <div class="card">
-      <div class="round-badge" id="round-badge-a">Round 1 / 5</div>
-      <div class="scoreboard">
-        <div class="team-score" id="sb-a-wrap">
-          <div class="team-name-display" id="sb-a-name">チームA</div>
-          <div class="score-num" id="sb-a-score">0</div>
-        </div>
-        <div class="team-score" id="sb-b-wrap">
-          <div class="team-name-display" id="sb-b-name">チームB</div>
-          <div class="score-num" id="sb-b-score">0</div>
-        </div>
-      </div>
-      <div class="step-label">Step 1 ✦ 数字を設定</div>
-      <h2 id="a-heading">チームA、正解の数字を設定してください</h2>
+      <div class="step-label">Step 1 ✦ 価値観を設定</div>
+      <h2 id="a-heading">出題チームの代表者を決めて、価値観が合う数字にスライドさせてください</h2>
       <div class="dial-section">
-        <div class="dial-label">スライドして数字を設定（1〜100）</div>
         <input type="range" id="slider-a" min="1" max="100" value="50" oninput="updateSlider('a',this.value)">
         <div class="dial-value" id="value-a">50</div>
         <div class="dial-ticks">
@@ -274,28 +270,20 @@
           <span class="tick">お題B ▷</span>
         </div>
       </div>
-      <button class="btn" onclick="confirmA()">✦ この数字に決める（相手チームに渡す）</button>
+      <button class="btn" onclick="confirmA()">
+        決定
+        <span class="btn-sub">回答チームに渡してください</span>
+      </button>
     </div>
   </div>
 
-  <!-- PHASE B -->
+  <!-- PHASE B: 回答チーム -->
   <div class="phase" id="phase-b">
     <div class="card">
-      <div class="step-label">Step 2 ✦ 数字を当てる</div>
-      <h2 id="b-heading">チームB、数字を当ててください</h2>
-      <p class="prompt-text" id="b-prompt">相手チームが設定した数字を当ててください。スケール上のどのあたりでしょう？</p>
-      <div class="score-zones">
-        <div class="zone zone-1">1pt</div>
-        <div class="zone zone-2">2pt</div>
-        <div class="zone zone-3">3pt</div>
-        <div class="zone zone-4">4pt</div>
-        <div class="zone zone-4">4pt</div>
-        <div class="zone zone-3">3pt</div>
-        <div class="zone zone-2">2pt</div>
-        <div class="zone zone-1">1pt</div>
-      </div>
+      <div class="step-label">Step 2 ✦ 価値観を当てる</div>
+      <h2 id="b-heading">回答チームの皆さんは、出題チームの価値観を当ててください</h2>
       <div class="dial-section">
-        <div class="dial-label">スライドして予測（1〜100）</div>
+        <div class="dial-label">スライドして出題チームの価値観を予測してください（1〜100）</div>
         <input type="range" id="slider-b" min="1" max="100" value="50" oninput="updateSlider('b',this.value)">
         <div class="dial-value" id="value-b">50</div>
         <div class="dial-ticks">
@@ -304,7 +292,21 @@
           <span class="tick">お題B ▷</span>
         </div>
       </div>
-      <button class="btn" onclick="confirmB()">✦ この数字で決定</button>
+      <div class="points-info-wrap">
+        <button class="points-info-link" onclick="togglePopup(event)">ポイントについて</button>
+        <div class="points-popup" id="points-popup">
+          <div class="points-popup-title">POINT SYSTEM</div>
+          <table>
+            <tr><td>差が 3 以内</td><td>4pt</td></tr>
+            <tr><td>差が 4〜7</td><td>3pt</td></tr>
+            <tr><td>差が 8〜15</td><td>2pt</td></tr>
+            <tr><td>差が 16〜25</td><td>1pt</td></tr>
+            <tr><td>差が 26 以上</td><td>0pt</td></tr>
+          </table>
+          <p class="popup-note">例：出題チームが 50、回答チームが 20 を選んだ場合、差は 30 なので 0pt。差が小さいほど高得点です。</p>
+        </div>
+      </div>
+      <button class="btn" onclick="confirmB()">決定</button>
     </div>
   </div>
 
@@ -314,20 +316,20 @@
       <div class="step-label">Final ✦ ゲーム終了</div>
       <div class="winner-display">
         <span class="trophy">🌙</span>
-        <h2 id="winner-name" style="font-size:20px;letter-spacing:3px">チームBの勝利</h2>
+        <h2 id="winner-name" style="font-size:20px;letter-spacing:3px">回答チームの勝利</h2>
         <p class="prompt-text" style="margin-top:8px" id="winner-message">素晴らしい感受性でした。</p>
       </div>
       <div class="final-scores">
         <div class="final-score" id="final-a">
-          <div class="final-score-name" id="final-a-name">チームA</div>
+          <div class="final-score-name" id="final-a-name">出題チーム</div>
           <div class="final-score-num" id="final-a-score">0</div>
         </div>
         <div class="final-score" id="final-b">
-          <div class="final-score-name" id="final-b-name">チームB</div>
+          <div class="final-score-name" id="final-b-name">回答チーム</div>
           <div class="final-score-num" id="final-b-score">0</div>
         </div>
       </div>
-      <button class="btn" style="margin-top:28px" onclick="resetGame()">✦ もう一度遊ぶ</button>
+      <button class="btn" style="margin-top:28px" onclick="resetGame()">もう一度遊ぶ</button>
     </div>
   </div>
 </div>
@@ -343,7 +345,7 @@
     <div class="reveal-title" id="reveal-title">いい線</div>
     <div class="reveal-msg" id="reveal-msg">もう少しでした。</div>
     <div class="reveal-numbers">
-      <div class="reveal-num-item"><div class="reveal-num-label">正解</div><div class="reveal-num-val" id="r-target">—</div></div>
+      <div class="reveal-num-item"><div class="reveal-num-label">出題</div><div class="reveal-num-val" id="r-target">—</div></div>
       <div class="reveal-num-item"><div class="reveal-num-label">回答</div><div class="reveal-num-val" id="r-guess">—</div></div>
       <div class="reveal-num-item"><div class="reveal-num-label">差</div><div class="reveal-num-val" id="r-diff">—</div></div>
     </div>
@@ -354,17 +356,18 @@
         <div class="compare-guess-m" id="r-guess-m"></div>
       </div>
       <div class="compare-legend">
-        <span><span class="legend-dot" style="background:var(--gold)"></span>正解</span>
+        <span><span class="legend-dot" style="background:var(--gold)"></span>出題</span>
         <span><span class="legend-dot" style="background:var(--navy)"></span>回答</span>
       </div>
     </div>
     <div class="reveal-scoreboard">
-      <div class="reveal-team"><div class="reveal-team-name" id="r-a-name">チームA</div><div class="reveal-team-score" id="r-a-score">0</div></div>
-      <div class="reveal-team"><div class="reveal-team-name" id="r-b-name">チームB</div><div class="reveal-team-score" id="r-b-score">0</div></div>
+      <div class="reveal-team"><div class="reveal-team-name" id="r-a-name">出題チーム</div><div class="reveal-team-score" id="r-a-score">0</div></div>
+      <div class="reveal-team"><div class="reveal-team-name" id="r-b-name">回答チーム</div><div class="reveal-team-score" id="r-b-score">0</div></div>
     </div>
     <div class="reveal-btn-wrap">
-      <button class="btn" id="r-next-btn" onclick="nextRound()">次のラウンドへ ✦</button>
-      <button class="btn btn-ghost" onclick="endGame()">ゲームを終了する</button>
+      <button class="btn" id="r-next-btn" onclick="nextRound()">続ける</button>
+      <button class="btn btn-ghost" id="r-swap-btn" onclick="swapTeams()">出題側と回答側を入れ替えて続ける</button>
+      <button class="btn btn-ghost" onclick="endGame()">終了</button>
     </div>
   </div>
 </div>
@@ -381,7 +384,22 @@
   }
 })();
 
-let state={teamA:"チームA",teamB:"チームB",scoreA:0,scoreB:0,round:1,totalRounds:5,targetValue:50,guessValue:50};
+let state={
+  teamA:"出題チーム", teamB:"回答チーム",
+  scoreA:0, scoreB:0,
+  round:1, totalRounds:5,
+  targetValue:50, guessValue:50
+};
+
+// ポップアップ
+function togglePopup(e){
+  e.stopPropagation();
+  const p=document.getElementById('points-popup');
+  p.classList.toggle('visible');
+}
+document.addEventListener('click',()=>{
+  document.getElementById('points-popup').classList.remove('visible');
+});
 
 function showPhase(id){
   document.querySelectorAll('.phase').forEach(p=>p.classList.remove('active'));
@@ -391,16 +409,15 @@ function showPhase(id){
 }
 
 function startGame(){
-  state.teamA=document.getElementById('team-a-name').value.trim()||"チームA";
-  state.teamB=document.getElementById('team-b-name').value.trim()||"チームB";
+  state.teamA=document.getElementById('team-a-name').value.trim()||"出題チーム";
+  state.teamB=document.getElementById('team-b-name').value.trim()||"回答チーム";
   state.scoreA=0; state.scoreB=0; state.round=1;
   showPhaseA();
 }
 
 function showPhaseA(){
   updateSB();
-  document.getElementById('round-badge-a').textContent=`Round ${state.round} / ${state.totalRounds}`;
-  document.getElementById('a-heading').textContent=`${state.teamA}、正解の数字を設定してください`;
+  document.getElementById('a-heading').textContent=`${state.teamA}の代表者を決めて、価値観が合う数字にスライドさせてください`;
   document.getElementById('slider-a').value=50;
   document.getElementById('value-a').textContent=50;
   showPhase('a');
@@ -414,10 +431,10 @@ function updateSlider(t,v){
 
 function confirmA(){
   state.targetValue=parseInt(document.getElementById('slider-a').value);
-  document.getElementById('b-heading').textContent=`${state.teamB}、数字を当ててください`;
-  document.getElementById('b-prompt').textContent=`${state.teamA}が設定した数字を当ててください。スケール上のどのあたりでしょう？`;
+  document.getElementById('b-heading').textContent=`${state.teamB}の皆さんは、出題チームの価値観を当ててください`;
   document.getElementById('slider-b').value=50;
   document.getElementById('value-b').textContent=50;
+  document.getElementById('points-popup').classList.remove('visible');
   showPhase('b');
 }
 
@@ -472,7 +489,7 @@ function showRevealCard(){
     `差は ${diff}。もう少しで届きそう。`,
     `差は ${diff}。なかなか近い。`,
     `差は ${diff}。あと少しだった。`,
-    `差は ${diff}。魂が共鳴しました`,
+    `差は ${diff}。魂が共鳴しました。`,
   ];
 
   document.getElementById('reveal-pts').textContent=pts;
@@ -490,7 +507,6 @@ function showRevealCard(){
   card.classList.add('active');
   card.style.animation='none'; card.offsetHeight; card.style.animation='revealPop 0.7s cubic-bezier(.22,.68,0,1.2) both';
 
-  // reset markers first
   document.getElementById('r-target-m').style.transition='none';
   document.getElementById('r-guess-m').style.transition='none';
   document.getElementById('r-target-m').style.left='50%';
@@ -503,7 +519,7 @@ function showRevealCard(){
     document.getElementById('r-guess-m').style.left=((guess-1)/99*100)+'%';
   },300);
 
-  document.getElementById('r-next-btn').textContent=state.round>=state.totalRounds?'結果を見る ✦':'次のラウンドへ ✦';
+  document.getElementById('r-next-btn').textContent=state.round>=state.totalRounds?'結果を見る':'続ける';
 }
 
 function updateSB(){
@@ -511,6 +527,16 @@ function updateSB(){
   document.getElementById('sb-b-name').textContent=state.teamB;
   document.getElementById('sb-a-score').textContent=state.scoreA;
   document.getElementById('sb-b-score').textContent=state.scoreB;
+}
+
+function swapTeams(){
+  // チーム名・スコアを入れ替え
+  [state.teamA, state.teamB] = [state.teamB, state.teamA];
+  [state.scoreA, state.scoreB] = [state.scoreB, state.scoreA];
+  document.getElementById('result-overlay').classList.remove('active');
+  state.round++;
+  if(state.round > state.totalRounds){ showEndGame(); return; }
+  showPhaseA();
 }
 
 function nextRound(){
@@ -549,7 +575,7 @@ function showEndGame(){
 }
 
 function resetGame(){
-  state={teamA:"チームA",teamB:"チームB",scoreA:0,scoreB:0,round:1,totalRounds:5,targetValue:50,guessValue:50};
+  state={teamA:"出題チーム",teamB:"回答チーム",scoreA:0,scoreB:0,round:1,totalRounds:5,targetValue:50,guessValue:50};
   document.getElementById('team-a-name').value='';
   document.getElementById('team-b-name').value='';
   document.getElementById('result-overlay').classList.remove('active');
